@@ -4,11 +4,14 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 int main(int argc, char *argv[])
 {
     const char *input_file = NULL;
     const char *input_dir = NULL;
     const char *output_dir = NULL;
+
+    FILE *input = NULL;
 
     if (argc == 1)
     {
@@ -22,7 +25,7 @@ int main(int argc, char *argv[])
     }
     else if (argc == 3)
     {
-        if (strcmp(argv[1], "-d") == 0)
+        if (strcmp(argv[1], "-d") == 0 || strcmp(argv[1], "--dir") == 0)
         {
             input_dir = argv[2];
         }
@@ -36,6 +39,21 @@ int main(int argc, char *argv[])
         }
     }
 
+    if (input_file != NULL)
+    {
+        input = fopen(input_file, "r");
+
+        if (input == NULL)
+        {
+            fprintf(stderr, "Error: cannot open input file.\n");
+            return 1;
+        }
+
+        printf("Input file opened successfully.\n");
+
+        fclose(input);
+    }
+
     if (input_dir != NULL)
     {
         printf("Input directory: %s\n", input_dir);
@@ -44,11 +62,6 @@ int main(int argc, char *argv[])
     if (output_dir != NULL)
     {
         printf("Output directory: %s\n", output_dir);
-    }
-
-    if (input_file != NULL)
-    {
-        printf("Input file: %s\n", input_file);
     }
 
     return 0;
