@@ -33,6 +33,8 @@ static long long parse_expression(void);
 
 static long long parse_term(void)
 {
+    long long value;
+
     skip_spaces();
 
     if (!isdigit((unsigned char)*p))
@@ -40,7 +42,41 @@ static long long parse_term(void)
         return 0;
     }
 
-    return parse_number();
+    value = parse_number();
+
+    while (1)
+    {
+        long long divisor;
+
+        skip_spaces();
+
+        if (*p == '*')
+        {
+            p++;
+            skip_spaces();
+            value *= parse_number();
+        }
+        else if (*p == '/')
+        {
+            p++;
+            skip_spaces();
+
+            divisor = parse_number();
+
+            if (divisor == 0)
+            {
+                return 0;
+            }
+
+            value /= divisor;
+        }
+        else
+        {
+            break;
+        }
+    }
+
+    return value;
 }
 
 static long long parse_expression(void)
