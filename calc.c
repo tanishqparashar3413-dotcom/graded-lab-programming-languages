@@ -6,6 +6,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <sys/stat.h>
+#include <errno.h>
 
 static const char *p;
 
@@ -153,7 +155,38 @@ int main(int argc, char *argv[])
 
         if (output_dir != NULL)
         {
-            output = fopen("output.txt", "w");
+            mkdir(output_dir, 0777);
+
+char output_path[1024];
+char base_name[256];
+
+const char *filename = strrchr(input_file, '/');
+
+if (filename == NULL)
+{
+    filename = input_file;
+}
+else
+{
+    filename++;
+}
+
+strcpy(base_name, filename);
+
+char *dot = strrchr(base_name, '.');
+
+if (dot != NULL)
+{
+    *dot = '\0';
+}
+
+snprintf(output_path,
+         sizeof(output_path),
+         "%s/%s_tanishq_parashar_241ADB173.txt",
+         output_dir,
+         base_name);
+
+output = fopen(output_path, "w");
 
             if (output == NULL)
             {
